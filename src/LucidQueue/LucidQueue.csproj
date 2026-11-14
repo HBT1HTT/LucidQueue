@@ -1,0 +1,46 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <UseWindowsForms>true</UseWindowsForms>
+    <RootNamespace>LucidQueue</RootNamespace>
+    <AssemblyName>LucidQueue</AssemblyName>
+    <ApplicationIcon>Assets\LucidQueue.ico</ApplicationIcon>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <LangVersion>latest</LangVersion>
+    <Version>0.2.0</Version>
+    <AssemblyVersion>0.2.0.0</AssemblyVersion>
+    <FileVersion>0.2.0.0</FileVersion>
+    <InformationalVersion>0.2.0</InformationalVersion>
+    <Product>Lucid Queue</Product>
+    <AssemblyTitle>Lucid Queue</AssemblyTitle>
+    <Company>Lucid</Company>
+    <Copyright>Lucid</Copyright>
+
+    <!-- 发布形态: 自包含 + 单文件 (win-x64), 目标机无需安装 .NET -->
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <SelfContained>true</SelfContained>
+    <PublishSingleFile>true</PublishSingleFile>
+    <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
+    <EnableCompressionInSingleFile>true</EnableCompressionInSingleFile>
+    <PublishReadyToRun>false</PublishReadyToRun>
+    <DebugType>none</DebugType>
+    <SatelliteResourceLanguages>en;zh-Hans</SatelliteResourceLanguages>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Resource Include="Assets\LucidQueue.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- WinForms 的隐式 using 会引入 System.Drawing / System.Windows.Forms，容易与 WPF 类型冲突 -->
+    <Using Remove="System.Drawing" />
+    <Using Remove="System.Windows.Forms" />
+    <Using Include="System.IO" />
+  </ItemGroup>
+
+</Project>

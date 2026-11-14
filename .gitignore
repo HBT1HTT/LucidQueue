@@ -1,0 +1,14 @@
+# 构建输出
+bin/
+obj/
+publish/
+dist/
+artifacts/
+
+# IDE
+.vs/
+*.user
+*.suo
+
+# 本地数据
+*.log

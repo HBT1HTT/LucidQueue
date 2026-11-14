@@ -1,0 +1,121 @@
+<Window x:Class="LucidQueue.Views.CompletedWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="已完成" Width="620" Height="620"
+        WindowStyle="None" Background="#FF0C0F15"
+        ResizeMode="NoResize" WindowStartupLocation="CenterOwner"
+        ShowInTaskbar="False"
+        FontFamily="{DynamicResource AppFont}">
+
+    <Grid>
+        <Border CornerRadius="0" BorderThickness="0" BorderBrush="#2AFFFFFF">
+            <Border.Background>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                    <GradientStop Color="#FF131720" Offset="0" />
+                    <GradientStop Color="#FF0C0F15" Offset="1" />
+                </LinearGradientBrush>
+            </Border.Background>
+
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="54" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="66" />
+                </Grid.RowDefinitions>
+
+                <Grid Grid.Row="0" Background="Transparent" MouseLeftButtonDown="Header_MouseLeftButtonDown">
+                    <StackPanel Margin="22,0,0,0" VerticalAlignment="Center">
+                        <TextBlock Text="已完成" FontSize="14" FontWeight="SemiBold" />
+                        <TextBlock Text="完成的记录都在这里，等待生效的会单独标出来。"
+                                   FontSize="9.5" Foreground="{DynamicResource TextTertiary}" Margin="0,2,0,0" />
+                    </StackPanel>
+                    <Button Style="{StaticResource IconButton}" HorizontalAlignment="Right"
+                            VerticalAlignment="Center" Margin="0,0,14,0" Click="Close_Click" ToolTip="关闭">
+                        <TextBlock Text="&#xE8BB;" Style="{StaticResource IconGlyph}" FontSize="11" />
+                    </Button>
+                </Grid>
+
+                <Border Grid.Row="1" Background="{DynamicResource AccentSoft}" BorderBrush="{DynamicResource AccentBorder}"
+                        BorderThickness="1" CornerRadius="9" Padding="13,10" Margin="20,2,20,10">
+                    <StackPanel>
+                        <TextBlock Text="{Binding PendingHeadline}" FontSize="11.5"
+                                   Foreground="{DynamicResource Accent}" FontWeight="SemiBold" />
+                        <TextBlock Text="待生效的条目必须保留，确认重启后再清除。"
+                                   FontSize="10" Foreground="{DynamicResource TextSecondary}" Margin="0,4,0,0" />
+                    </StackPanel>
+                </Border>
+
+                <Grid Grid.Row="2" Margin="20,0,20,10">
+                    <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="0,0,4,0">
+                        <ItemsControl x:Name="CompletedList">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border Background="{DynamicResource CardBg}" BorderBrush="{DynamicResource CardBorder}"
+                                            BorderThickness="1" CornerRadius="10" Padding="13,11" Margin="0,0,0,7">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="Auto" />
+                                            </Grid.ColumnDefinitions>
+                                            <StackPanel>
+                                                <TextBlock Text="{Binding Title}" FontSize="12.5"
+                                                           TextTrimming="CharacterEllipsis" />
+                                                <WrapPanel Margin="0,6,0,0">
+                                                    <ContentControl Style="{StaticResource EffectBadge}"
+                                                                    Content="{Binding EffectLabel}"
+                                                                    Margin="0,0,6,0"
+                                                                    Visibility="{Binding IsPendingEffect, Converter={StaticResource InverseBoolToVis}}" />
+                                                    <ContentControl Style="{StaticResource PendingBadge}"
+                                                                    Content="{Binding PendingLabel}"
+                                                                    Margin="0,0,6,0"
+                                                                    Visibility="{Binding IsPendingEffect, Converter={StaticResource BoolToVis}}" />
+                                                    <TextBlock Text="{Binding CompletedWhenText}"
+                                                               FontSize="9.5" Foreground="{DynamicResource TextTertiary}"
+                                                               VerticalAlignment="Center" />
+                                                </WrapPanel>
+                                            </StackPanel>
+                                            <Button Grid.Column="1" Content="恢复" Style="{StaticResource SubtleButton}"
+                                                    Padding="9,4" VerticalAlignment="Center" Margin="10,0,0,0"
+                                                    Tag="{Binding}" Click="Restore_Click"
+                                                    AutomationProperties.Name="恢复任务" />
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </ScrollViewer>
+
+                    <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center"
+                                Visibility="{Binding HasCompleted, Converter={StaticResource InverseBoolToVis}}">
+                        <TextBlock Text="还没有已完成的任务。" FontSize="12.5"
+                                   Foreground="{DynamicResource TextSecondary}" HorizontalAlignment="Center" />
+                        <TextBlock Text="在队列里勾上「已完成」，任务就会移到这里。"
+                                   FontSize="10" Foreground="{DynamicResource TextTertiary}"
+                                   HorizontalAlignment="Center" Margin="0,6,0,0" />
+                    </StackPanel>
+                </Grid>
+
+                <Grid Grid.Row="3">
+                    <Border BorderBrush="{DynamicResource Divider}" BorderThickness="0,1,0,0" />
+                    <Grid Margin="20,0,20,0">
+                        <StackPanel VerticalAlignment="Center">
+                            <TextBlock Text="{Binding CompletedFooter}" Style="{StaticResource TinyText}" />
+                            <TextBlock x:Name="FooterStatus" FontSize="9.5"
+                                       Foreground="{DynamicResource Warning}"
+                                       Margin="0,3,0,0" Visibility="Collapsed" />
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                            <Button Content="清除已完成" Style="{StaticResource DangerButton}"
+                                    Padding="14,7" FontSize="11"
+                                    Click="Clear_Click"
+                                    AutomationProperties.Name="清除已完成" />
+                            <Button Content="关闭" Style="{StaticResource GhostButton}"
+                                    Padding="16,7" Margin="8,0,0,0" Click="Close_Click" />
+                        </StackPanel>
+                    </Grid>
+                </Grid>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>
